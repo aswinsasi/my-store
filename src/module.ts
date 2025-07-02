@@ -6,8 +6,9 @@ import cookieSession from 'cookie-session';
 import cors from 'cors';
 import express, { Application } from "express";
 import mongoose from 'mongoose';
-import { errorHandler } from '@myshopping-app/common';
+import { currentUser, errorHandler } from '@myshopping-app/common';
 import { authRouters } from './auth/auth.routers';
+import { sellerRouter } from './seller/seller.routers';
 
 
 export class AppModule {
@@ -31,10 +32,6 @@ export class AppModule {
         app.use(express.urlencoded({ extended: false }))
         app.use(express.json())
 
-        app.use(authRouters);
-        
-        app.use(errorHandler);
-
         Object.setPrototypeOf(this, AppModule.prototype);
     }
 
@@ -53,6 +50,13 @@ export class AppModule {
         }catch(err) {
             throw new Error("Database connection error!")
         }
+
+        this.app.use(currentUser(process.env.JWT_KEY!));
+
+        this.app.use(authRouters);
+        this.app.use(sellerRouter);
+        
+        this.app.use(errorHandler);
 
         this.app.listen(3000, ()=> console.log("OK! port: 3000 listening"));
     }

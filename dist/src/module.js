@@ -54,6 +54,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const common_1 = require("@myshopping-app/common");
 const auth_routers_1 = require("./auth/auth.routers");
+const seller_routers_1 = require("./seller/seller.routers");
 class AppModule {
     constructor(app) {
         this.app = app;
@@ -73,8 +74,6 @@ class AppModule {
         // Instead of adding an extra dependency, simply use these built-in methods to parse incoming request bodies efficiently!
         app.use(express_1.default.urlencoded({ extended: false }));
         app.use(express_1.default.json());
-        app.use(auth_routers_1.authRouters);
-        app.use(common_1.errorHandler);
         Object.setPrototypeOf(this, AppModule.prototype);
     }
     start() {
@@ -91,6 +90,10 @@ class AppModule {
             catch (err) {
                 throw new Error("Database connection error!");
             }
+            this.app.use((0, common_1.currentUser)(process.env.JWT_KEY));
+            this.app.use(auth_routers_1.authRouters);
+            this.app.use(seller_routers_1.sellerRouter);
+            this.app.use(common_1.errorHandler);
             this.app.listen(3000, () => console.log("OK! port: 3000 listening"));
         });
     }
