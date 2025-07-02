@@ -5,7 +5,8 @@ import express from 'express';
 declare global {
     namespace Express {
         interface Request {
-            currentUser?: JwtPayload
+            currentUser?: JwtPayload;
+            uploaderError?: Error
         }
     }
 }

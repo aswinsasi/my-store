@@ -34,6 +34,8 @@ export class AuthService {
 
         const jwt = this.authenticationService.generateJwt({ email, userId: user.id }, process.env.JWT_KEY!);
 
+        if (!jwt) return; // important! prevent sending a response again
+
         return jwt;
     }
 }

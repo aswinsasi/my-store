@@ -39,6 +39,8 @@ class AuthService {
             if (!samePwd)
                 return errCallBack(new common_1.BadRequestError('Invalid credentials'));
             const jwt = this.authenticationService.generateJwt({ email, userId: user.id }, process.env.JWT_KEY);
+            if (!jwt)
+                return; // important! prevent sending a response again
             return jwt;
         });
     }
