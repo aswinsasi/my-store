@@ -12,7 +12,6 @@ export class ProductService {
         return await this.productModel.findById(productId);
     }
 
-    //commit 
     async create(createProductDto: CreateProductDto) {
         const images = this.generateProductImages(createProductDto.files);
         const product = await new Product({
